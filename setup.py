@@ -16,13 +16,14 @@ setup(
     license="BSD",
     keywords=[
         "aero", "aeronautical", "aerospace",
-        "engineering", "atmosphere", "gas"
+        "engineering", "atmosphere", "gas",
+        "coordinates"
     ],
     requires=["numpy", "scipy"],
     packages=[
         "skaero",
         "skaero.atmosphere", "skaero.gasdynamics",
-        "skaero.util"
+        "skaero.util", "skaero.geometry"
     ],
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
