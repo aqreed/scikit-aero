@@ -9,10 +9,10 @@ __version__ = d['__version__']
 setup(
     name="scikit-aero",
     version=__version__,
-    description="Aeronautical engineering calculations in Python.",
-    author="Juan Luis Cano",
-    author_email="juanlu001@gmail.com",
-    url="https://github.com/Juanlu001/scikit-aero",
+    description="Aeronautical engineering calculations in Python",
+    author="AeroPython",
+    author_email="aeropython@groups.io",
+    url="https://github.com/AeroPython/scikit-aero",
     license="BSD",
     keywords=[
         "aero", "aeronautical", "aerospace",
