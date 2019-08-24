@@ -2,7 +2,7 @@
         :align: center
 
 .. image:: https://img.shields.io/travis/aqreed/scikit-aero/develop?style=for-the-badge
-        :target: https://travis-ci.com/aqreed/AeroPython
+        :target: https://travis-ci.com/aqreed/scikit-aero
         :alt: Build
 
 .. image:: https://img.shields.io/codecov/c/github/aqreed/scikit-aero/develop?style=for-the-badge
