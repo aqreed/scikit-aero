@@ -1,9 +1,9 @@
-.. image:: https://travis-ci.com/aqreed/AeroPython.svg?branch=master?style=for-the-badge
-        :target: https://travis-ci.com/aqreed/AeroPython
-        :alt: Build
-
 .. image:: doc/source/_static/logo.png
         :align: center
+
+.. image:: https://img.shields.io/travis/aqreed/scikit-aero/develop?style=for-the-badge
+        :target: https://travis-ci.com/aqreed/AeroPython
+        :alt: Build
 
 .. image:: https://img.shields.io/maintenance/yes/2019.svg?style=for-the-badge
 	:target: https://github.com/AeroPython/scikit-aero
