@@ -1,3 +1,7 @@
+.. image:: https://travis-ci.com/aqreed/AeroPython.svg?branch=master?style=for-the-badge
+        :target: https://travis-ci.com/aqreed/AeroPython
+        :alt: Build
+
 .. image:: doc/source/_static/logo.png
         :align: center
 
@@ -116,17 +120,17 @@ version of IPython and its dependencies.
 Install
 =======
 
-To install just execute:
+To install the last version released on PyPi:
 
 .. code-block:: bash
 
         $ pip install scikit-aero
 
-If you want to install the package in development mode, please execute:
+If you want to install the package in development mode, download it and execute:
 
 .. code-block:: bash
 
-        $ pip install --editable /path_to_scikit-aero
+        $ pip install --e /path_to_scikit-aero
 
 It is recommended that you **never ever use sudo** with distutils, pip,
 setuptools and friends in Linux because you might seriously break your
@@ -145,18 +149,18 @@ or `local installations`_.
 Testing
 =======
 
-scikit-aero recommends py.test for running the test suite. Running from the
+scikit-aero recommends pytest for running the test suite. Running from the
 top directory:
 
 .. code-block:: bash
 
         $ pytest
 
-To test code coverage, make sure you install `py.test-cov`_ extension and run:
+To test code coverage, make sure you install `pytest-cov`_ extension and run from the top directory:
 
 .. code-block:: bash
 
-        $ pytest --cov skaero/
+        $ pytest --cov
 
 .. _`py.test-cov`: https://pypi.python.org/pypi/pytest-cov
 
@@ -171,11 +175,10 @@ http://nbviewer.ipython.org/url/raw.github.com/Pybonacci/scikit-aero/master/exam
 
 .. _`nbviewer`: http://nbviewer.ipython.org/
 
-Bug reporting
-=============
+Bug reporting, ideas, comments
+==============================
 
-I am pretty sure I never introduce bugs in my code, but if you want to prove
-me wrong please refer to the `issue tracker`_ on GitHub.
+Please refer to the `issue tracker`_ on GitHub.
 
 .. _`issue tracker`: https://github.com/Juanlu001/scikit-aero/issues
 
