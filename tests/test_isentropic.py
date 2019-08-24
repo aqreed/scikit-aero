@@ -154,7 +154,7 @@ def test_speed_of_sound_ratio():
 def test_mach_from_area_ratio_subsonic():
     fl = isentropic.IsentropicFlow(1.4)
     A_Astar_list = [
-        np.inf,
+        1e4,
         2.4027,
         1.7780,
         1.0382,
