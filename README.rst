@@ -5,6 +5,10 @@
         :target: https://travis-ci.com/aqreed/AeroPython
         :alt: Build
 
+.. image:: https://img.shields.io/codecov/c/github/aqreed/scikit-aero/develop?style=for-the-badge
+        :target: https://codecov.io/gh/aqreed/scikit-aero
+        :alt: Coverage
+
 .. image:: https://img.shields.io/maintenance/yes/2019.svg?style=for-the-badge
 	:target: https://github.com/AeroPython/scikit-aero
 	:alt: Maintenance
