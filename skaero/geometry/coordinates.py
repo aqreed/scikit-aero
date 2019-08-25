@@ -75,10 +75,10 @@ def ned2ecef(v_ned, lat, lng):
         vector expressed in ECEF coordinates
     """
     if abs(lat) > 90:
-        raise ValueError('latitude should be -90 <= latitude <= 90')
+        raise ValueError('latitude should be -90º <= latitude <= 90º')
 
     if abs(lng) > 180:
-        raise ValueError('longitude should be -180 <= longitude <= 180')
+        raise ValueError('longitude should be -180º <= longitude <= 180º')
 
     lat = deg2rad(lat)
     lng = deg2rad(lng)
@@ -115,13 +115,13 @@ def body2ned(v_body, theta, phi, psi):
         vector expressed in local horizon (NED) coordinates
     """
     if abs(theta) > np.pi/2:
-        raise ValueError('theta should be -90º <= theta <= 90º')
+        raise ValueError('theta should be -pi/2 <= theta <= pi/2')
 
     if abs(phi) > np.pi:
-        raise ValueError('phi should be -180º <= phi <= 180º')
+        raise ValueError('phi should be -pi <= phi <= pi')
 
     if not 0 <= psi <= 2*np.pi:
-        raise ValueError('psi should be 0º <= psi <= 360º')
+        raise ValueError('psi should be 0 <= psi <= 2*pi')
 
     Lnb = array([[cos(theta) * cos(psi),
                   sin(phi) * sin(theta) * cos(psi) - cos(phi) * sin(psi),
@@ -140,8 +140,8 @@ def body2ned(v_body, theta, phi, psi):
 
 def ned2body(v_ned, theta, phi, psi):
     """
-    Transforms the vector coordinates in local horizon frame of reference
-    to body frame of reference.
+    Converts vector from local geodetic horizon reference frame (NED -
+    North, East, Down) to body reference frame
 
     Parameters
     ----------
@@ -160,13 +160,13 @@ def ned2body(v_ned, theta, phi, psi):
         vector expressed in body coordinates
     """
     if abs(theta) > np.pi/2:
-        raise ValueError('theta should be -90º <= theta <= 90º')
+        raise ValueError('theta should be -pi/2 <= theta <= pi/2')
 
     if abs(phi) > np.pi:
-        raise ValueError('phi should be -180º <= phi <= 180º')
+        raise ValueError('phi should be -pi <= phi <= pi')
 
     if not 0 <= psi <= 2*np.pi:
-        raise ValueError('psi should be 0º <= psi <= 360º')
+        raise ValueError('psi should be 0 <= psi <= 2*pi')
 
     Lbn = array([[cos(theta) * cos(psi),
                   cos(theta) * sin(psi),
@@ -179,5 +179,75 @@ def ned2body(v_ned, theta, phi, psi):
                   cos(phi) * cos(theta)]])
 
     v_body = Lbn.dot(v_ned)
+
+    return v_body
+
+
+def body2wind(v_body, alpha, beta):
+    """
+    Converts vector from body reference frame to wind reference frame
+
+    Parameters
+    ----------
+    v_body : array_like
+        vector expressed in body coordinates
+    alpha : float
+        angle of attack in radians
+    beta : float
+        sideslip angle in radians
+
+    Returns
+    -------
+    v_wind : array_like
+        vector expressed in wind coordinates
+    """
+    if abs(alpha) > np.pi/2:
+        raise ValueError('alpha should be -pi/2 <= alpha <= pi/2')
+
+    if abs(beta) > np.pi:
+        raise ValueError('beta should be -pi <= beta <= pi')
+
+    Lwb = array([[cos(alpha) * cos(beta), sin(beta), sin(alpha) * cos(beta)],
+                 [-cos(alpha) * sin(beta), cos(beta), -sin(alpha) * sin(beta)],
+                 [-sin(alpha), 0, cos(alpha)]])
+
+    v_wind = Lwb.dot(v_body)
+
+    return v_wind
+
+
+def wind2body(v_wind, alpha, beta):
+    """
+    Converts vector from wind reference frame to body reference frame
+
+    Parameters
+    ----------
+    v_wind : array_like
+        vector expressed in wind coordinates
+    alpha : float
+        angle of attack in radians
+    beta : float
+        sideslip angle in radians
+
+    Returns
+    -------
+    v_body : array_like
+        vector expressed in body coordinates
+    """
+    if abs(alpha) > np.pi/2:
+        raise ValueError('alpha should be -pi/2 <= alpha <= pi/2')
+
+    if abs(beta) > np.pi:
+        raise ValueError('beta should be -pi <= beta <= pi')
+
+    Lbw = array([[cos(alpha) * cos(beta),
+                  -cos(alpha) * sin(beta),
+                  -sin(alpha)],
+                 [sin(beta), cos(beta), 0],
+                 [sin(alpha) * cos(beta),
+                  -sin(alpha) * sin(beta),
+                  cos(alpha)]])
+
+    v_body = Lbw.dot(v_wind)
 
     return v_body
