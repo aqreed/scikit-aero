@@ -142,7 +142,7 @@ def body2ned(v_body, theta, phi, psi):
         raise TypeError('phi should be "float" or "int"')
 
     if isinstance(psi, (int, float)):
-        if not 0 <= psi > 2*np.pi:
+        if not 0 <= psi <= 2*np.pi:
             raise ValueError('psi should be 0º <= psi <= 360º')
     else:
         raise TypeError('psi should be "float" or "int"')
@@ -196,7 +196,7 @@ def ned2body(v_ned, theta, phi, psi):
         raise TypeError('phi should be "float" or "int"')
 
     if isinstance(psi, (int, float)):
-        if not 0 <= psi > 2*np.pi:
+        if not 0 <= psi <= 2*np.pi:
             raise ValueError('psi should be 0º <= psi <= 360º')
     else:
         raise TypeError('psi should be "float" or "int"')

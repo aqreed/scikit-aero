@@ -8,9 +8,10 @@ from __future__ import division, absolute_import
 
 import numpy as np
 from numpy.testing import assert_array_almost_equal
+from numpy import array, deg2rad, rad2deg
 import unittest as ut
 
-from skaero.geometry.coordinates import lla2ecef, ned2ecef
+from skaero.geometry.coordinates import *
 
 
 class Test_lla2ecef(ut.TestCase):
@@ -40,14 +41,14 @@ class Test_lla2ecef(ut.TestCase):
         lat = 0
         lng = 0
         h = 0
-        expected_value = np.array([a, 0, 0])
+        expected_value = array([a, 0, 0])
         self.assertTrue(np.allclose(lla2ecef(lat, lng, h),
                                     expected_value))
 
         lat = 0
         lng = 180
         h = 0
-        expected_value = np.array([-a, 0, 0])
+        expected_value = array([-a, 0, 0])
         self.assertTrue(np.allclose(lla2ecef(lat, lng, h),
                                     expected_value))
 
@@ -59,14 +60,14 @@ class Test_lla2ecef(ut.TestCase):
         lat = 0
         lng = 90
         h = 0
-        expected_value = np.array([0, a, 0])
+        expected_value = array([0, a, 0])
         self.assertTrue(np.allclose(lla2ecef(lat, lng, h),
                                     expected_value))
 
         lat = 0
         lng = -90
         h = 0
-        expected_value = np.array([0, -a, 0])
+        expected_value = array([0, -a, 0])
         self.assertTrue(np.allclose(lla2ecef(lat, lng, h),
                                     expected_value))
 
@@ -78,14 +79,14 @@ class Test_lla2ecef(ut.TestCase):
         lat = 90
         lng = 0
         h = 0
-        expected_value = np.array([0, 0, b])
+        expected_value = array([0, 0, b])
         self.assertTrue(np.allclose(lla2ecef(lat, lng, h),
                                     expected_value))
 
         lat = -90
         lng = 0
         h = 0
-        expected_value = np.array([0, 0, -b])
+        expected_value = array([0, 0, -b])
         self.assertTrue(np.allclose(lla2ecef(lat, lng, h),
                                     expected_value))
 
@@ -95,13 +96,13 @@ class Test_ned2ecef(ut.TestCase):
     Test function that transforms ned-basis vectors to ecef-basis
     """
     def test_latitude_wrong_input(self):
-        v_aux = np.array([1, 0, 0])
+        v_aux = array([1, 0, 0])
         self.assertRaises(ValueError, ned2ecef, v_aux, 91.0, 0)
         self.assertRaises(ValueError, ned2ecef, v_aux, -90.001, 0)
         self.assertRaises(TypeError, ned2ecef, v_aux, 't', 0)
 
     def test_longitude_wrong_input(self):
-        v_aux = np.array([1, 0, 0])
+        v_aux = array([1, 0, 0])
         self.assertRaises(ValueError, ned2ecef, v_aux, 0, -190.1)
         self.assertRaises(ValueError, ned2ecef, v_aux, 0, 180.1)
         self.assertRaises(TypeError, ned2ecef, v_aux, 0, '0')
@@ -109,53 +110,363 @@ class Test_ned2ecef(ut.TestCase):
     def test_1(self):
         lat, lng = 0, 0
 
-        v_ned = np.array([1, 0, 0])
-        expected_value = np.array([0, 0, 1])
+        v_ned = array([1, 0, 0])
+        expected_value = array([0, 0, 1])
         self.assertTrue(np.allclose(ned2ecef(v_ned, lat, lng),
                                     expected_value))
 
-        v_ned = np.array([0, 1, 0])
-        expected_value = np.array([0, 1, 0])
+        v_ned = array([0, 1, 0])
+        expected_value = array([0, 1, 0])
         self.assertTrue(np.allclose(ned2ecef(v_ned, lat, lng),
                                     expected_value))
 
-        v_ned = np.array([0, 0, 1])
-        expected_value = np.array([-1, 0, 0])
+        v_ned = array([0, 0, 1])
+        expected_value = array([-1, 0, 0])
         self.assertTrue(np.allclose(ned2ecef(v_ned, lat, lng),
                                     expected_value))
 
     def test_2(self):
         lat, lng = 0, 90
 
-        v_ned = np.array([1, 0, 0])
-        expected_value = np.array([0, 0, 1])
+        v_ned = array([1, 0, 0])
+        expected_value = array([0, 0, 1])
         self.assertTrue(np.allclose(ned2ecef(v_ned, lat, lng),
                                     expected_value))
 
-        v_ned = np.array([0, 1, 0])
-        expected_value = np.array([-1, 0, 0])
+        v_ned = array([0, 1, 0])
+        expected_value = array([-1, 0, 0])
         self.assertTrue(np.allclose(ned2ecef(v_ned, lat, lng),
                                     expected_value))
 
-        v_ned = np.array([0, 0, 1])
-        expected_value = np.array([0, -1, 0])
+        v_ned = array([0, 0, 1])
+        expected_value = array([0, -1, 0])
         self.assertTrue(np.allclose(ned2ecef(v_ned, lat, lng),
                                     expected_value))
 
     def test_3(self):
         lat, lng = 90, 0
 
-        v_ned = np.array([1, 0, 0])
-        expected_value = np.array([-1, 0, 0])
+        v_ned = array([1, 0, 0])
+        expected_value = array([-1, 0, 0])
         self.assertTrue(np.allclose(ned2ecef(v_ned, lat, lng),
                                     expected_value))
 
-        v_ned = np.array([0, 1, 0])
-        expected_value = np.array([0, 1, 0])
+        v_ned = array([0, 1, 0])
+        expected_value = array([0, 1, 0])
         self.assertTrue(np.allclose(ned2ecef(v_ned, lat, lng),
                                     expected_value))
 
-        v_ned = np.array([0, 0, 1])
-        expected_value = np.array([0, 0, -1])
+        v_ned = array([0, 0, 1])
+        expected_value = array([0, 0, -1])
         self.assertTrue(np.allclose(ned2ecef(v_ned, lat, lng),
+                                    expected_value))
+
+
+class Test_body2ned(ut.TestCase):
+    """
+    Test function that transforms body-basis vectors to ned-basis
+    """
+    def test_wrong_theta_input(self):
+        v_aux = array([1, 0, 0])
+
+        theta, phi, psi = deg2rad(90.1), deg2rad(0), deg2rad(0)
+        self.assertRaises(ValueError, body2ned, v_aux, theta, phi, psi)
+
+        theta, phi, psi = deg2rad(-90.01), deg2rad(0), deg2rad(0)
+        self.assertRaises(ValueError, body2ned, v_aux, theta, phi, psi)
+
+        theta, phi, psi = 'a', deg2rad(0), deg2rad(0)
+        self.assertRaises(TypeError, body2ned, v_aux, theta, phi, psi)
+
+    def test_wrong_phi_input(self):
+        v_aux = array([1, 0, 0])
+
+        theta, phi, psi = deg2rad(0), deg2rad(180.1), deg2rad(0)
+        self.assertRaises(ValueError, body2ned, v_aux, theta, phi, psi)
+
+        theta, phi, psi = deg2rad(0), deg2rad(-181), deg2rad(0)
+        self.assertRaises(ValueError, body2ned, v_aux, theta, phi, psi)
+
+        theta, phi, psi = deg2rad(0), 'a', deg2rad(0)
+        self.assertRaises(TypeError, body2ned, v_aux, theta, phi, psi)
+
+    def test_wrong_psi_input(self):
+        v_aux = array([1, 0, 0])
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(-1)
+        self.assertRaises(ValueError, body2ned, v_aux, theta, phi, psi)
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(361)
+        self.assertRaises(ValueError, body2ned, v_aux, theta, phi, psi)
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), 'a'
+        self.assertRaises(TypeError, body2ned, v_aux, theta, phi, psi)
+
+    def test_OXb(self):
+        v_body = array([1, 0, 0])
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(0)
+        expected_value = array([1, 0, 0])
+        self.assertTrue(np.allclose(body2ned(v_body, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(90), deg2rad(0), deg2rad(0)
+        expected_value = array([0, 0, -1])
+        self.assertTrue(np.allclose(body2ned(v_body, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(-90), deg2rad(0), deg2rad(0)
+        expected_value = array([0, 0, 1])
+        self.assertTrue(np.allclose(body2ned(v_body, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(90), deg2rad(0)
+        expected_value = array([1, 0, 0])
+        self.assertTrue(np.allclose(body2ned(v_body, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(-90), deg2rad(0)
+        expected_value = array([1, 0, 0])
+        self.assertTrue(np.allclose(body2ned(v_body, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(90)
+        expected_value = array([0, 1, 0])
+        self.assertTrue(np.allclose(body2ned(v_body, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(270)
+        expected_value = array([0, -1, 0])
+        self.assertTrue(np.allclose(body2ned(v_body, theta, phi, psi),
+                                    expected_value))
+
+    def test_OYb(self):
+        v_body = array([0, 1, 0])
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(0)
+        expected_value = array([0, 1, 0])
+        self.assertTrue(np.allclose(body2ned(v_body, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(90), deg2rad(0), deg2rad(0)
+        expected_value = array([0, 1, 0])
+        self.assertTrue(np.allclose(body2ned(v_body, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(-90), deg2rad(0), deg2rad(0)
+        expected_value = array([0, 1, 0])
+        self.assertTrue(np.allclose(body2ned(v_body, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(90), deg2rad(0)
+        expected_value = array([0, 0, 1])
+        self.assertTrue(np.allclose(body2ned(v_body, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(-90), deg2rad(0)
+        expected_value = array([0, 0, -1])
+        self.assertTrue(np.allclose(body2ned(v_body, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(90)
+        expected_value = array([-1, 0, 0])
+        self.assertTrue(np.allclose(body2ned(v_body, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(270)
+        expected_value = array([1, 0, 0])
+        self.assertTrue(np.allclose(body2ned(v_body, theta, phi, psi),
+                                    expected_value))
+
+    def test_OZb(self):
+        v_body = array([0, 0, 1])
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(0)
+        expected_value = array([0, 0, 1])
+        self.assertTrue(np.allclose(body2ned(v_body, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(90), deg2rad(0), deg2rad(0)
+        expected_value = array([1, 0, 0])
+        self.assertTrue(np.allclose(body2ned(v_body, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(-90), deg2rad(0), deg2rad(0)
+        expected_value = array([-1, 0, 0])
+        self.assertTrue(np.allclose(body2ned(v_body, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(90), deg2rad(0)
+        expected_value = array([0, -1, 0])
+        self.assertTrue(np.allclose(body2ned(v_body, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(-90), deg2rad(0)
+        expected_value = array([0, 1, 0])
+        self.assertTrue(np.allclose(body2ned(v_body, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(90)
+        expected_value = array([0, 0, 1])
+        self.assertTrue(np.allclose(body2ned(v_body, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(270)
+        expected_value = array([0, 0, 1])
+        self.assertTrue(np.allclose(body2ned(v_body, theta, phi, psi),
+                                    expected_value))
+
+
+class Test_ned2body(ut.TestCase):
+    """
+    Test function that transforms ned-basis vectors to body-basis
+    """
+    def test_wrong_theta_input(self):
+        v_aux = array([1, 0, 0])
+
+        theta, phi, psi = deg2rad(90.1), deg2rad(0), deg2rad(0)
+        self.assertRaises(ValueError, ned2body, v_aux, theta, phi, psi)
+
+        theta, phi, psi = deg2rad(-90.01), deg2rad(0), deg2rad(0)
+        self.assertRaises(ValueError, ned2body, v_aux, theta, phi, psi)
+
+        theta, phi, psi = 'a', deg2rad(0), deg2rad(0)
+        self.assertRaises(TypeError, ned2body, v_aux, theta, phi, psi)
+
+    def test_wrong_phi_input(self):
+        v_aux = array([1, 0, 0])
+
+        theta, phi, psi = deg2rad(0), deg2rad(180.1), deg2rad(0)
+        self.assertRaises(ValueError, ned2body, v_aux, theta, phi, psi)
+
+        theta, phi, psi = deg2rad(0), deg2rad(-181), deg2rad(0)
+        self.assertRaises(ValueError, ned2body, v_aux, theta, phi, psi)
+
+        theta, phi, psi = deg2rad(0), 'a', deg2rad(0)
+        self.assertRaises(TypeError, ned2body, v_aux, theta, phi, psi)
+
+    def test_wrong_psi_input(self):
+        v_aux = array([1, 0, 0])
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(-1)
+        self.assertRaises(ValueError, ned2body, v_aux, theta, phi, psi)
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(361)
+        self.assertRaises(ValueError, ned2body, v_aux, theta, phi, psi)
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), 'a'
+        self.assertRaises(TypeError, ned2body, v_aux, theta, phi, psi)
+
+    def test_OXb(self):
+        v_ned = array([1, 0, 0])
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(0)
+        expected_value = array([1, 0, 0])
+        self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(90), deg2rad(0), deg2rad(0)
+        expected_value = array([0, 0, 1])
+        self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(-90), deg2rad(0), deg2rad(0)
+        expected_value = array([0, 0, -1])
+        self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(90), deg2rad(0)
+        expected_value = array([1, 0, 0])
+        self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(-90), deg2rad(0)
+        expected_value = array([1, 0, 0])
+        self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(90)
+        expected_value = array([0, -1, 0])
+        self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(270)
+        expected_value = array([0, 1, 0])
+        self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
+                                    expected_value))
+
+    def test_OYb(self):
+        v_ned = array([0, 1, 0])
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(0)
+        expected_value = array([0, 1, 0])
+        self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(90), deg2rad(0), deg2rad(0)
+        expected_value = array([0, 1, 0])
+        self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(-90), deg2rad(0), deg2rad(0)
+        expected_value = array([0, 1, 0])
+        self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(90), deg2rad(0)
+        expected_value = array([0, 0, -1])
+        self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(-90), deg2rad(0)
+        expected_value = array([0, 0, 1])
+        self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(90)
+        expected_value = array([1, 0, 0])
+        self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(90), deg2rad(270)
+        expected_value = array([-1, 0, 0])
+        self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
+                                    expected_value))
+
+    def test_OZb(self):
+        v_ned = array([0, 0, 1])
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(0)
+        expected_value = array([0, 0, 1])
+        self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(90), deg2rad(0), deg2rad(0)
+        expected_value = array([-1, 0, 0])
+        self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(-90), deg2rad(0), deg2rad(0)
+        expected_value = array([1, 0, 0])
+        self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(90), deg2rad(0)
+        expected_value = array([0, 1, 0])
+        self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(-90), deg2rad(0)
+        expected_value = array([0, -1, 0])
+        self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(90)
+        expected_value = array([0, 0, 1])
+        self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
+                                    expected_value))
+
+        theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(270)
+        expected_value = array([0, 0, 1])
+        self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
                                     expected_value))
