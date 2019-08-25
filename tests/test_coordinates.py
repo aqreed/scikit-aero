@@ -17,16 +17,20 @@ class Test_lla2ecef(ut.TestCase):
     """
         Test function that returns ecef position from lat, long, altitude
     """
-    def test_latitude_input_range(self):
+    def test_latitude_wrong_input(self):
         self.assertRaises(ValueError, lla2ecef, 91.0, 0, 0)
         self.assertRaises(ValueError, lla2ecef, -90.001, 0, 0)
+        self.assertRaises(TypeError, lla2ecef, '91.0', 0, 0)
 
-    def test_longitude_input_range(self):
-        self.assertRaises(ValueError, lla2ecef, 0, -0.1, 0)
-        self.assertRaises(ValueError, lla2ecef, 0, 360., 0)
+    def test_longitude_wrong_input(self):
+        self.assertRaises(ValueError, lla2ecef, 0, -189, 0)
+        self.assertRaises(ValueError, lla2ecef, 0, 181.9, 0)
+        self.assertRaises(TypeError, lla2ecef, 8, '0', 0)
 
-    def test_altitude_input_range(self):
+    def test_altitude_wrong_input(self):
         self.assertRaises(ValueError, lla2ecef, 0, 0, -1.0)
+        self.assertRaises(ValueError, lla2ecef, 0, 0, 85000.0)
+        self.assertRaises(TypeError, lla2ecef, 0, 0, 'e')
 
     def test_OX(self):
         a = 6378137  # [m] Earth equatorial axis
@@ -60,7 +64,7 @@ class Test_lla2ecef(ut.TestCase):
                                     expected_value))
 
         lat = 0
-        lng = 270
+        lng = -90
         h = 0
         expected_value = np.array([0, -a, 0])
         self.assertTrue(np.allclose(lla2ecef(lat, lng, h),
@@ -90,15 +94,17 @@ class Test_ned2ecef(ut.TestCase):
     """
     Test function that transforms ned-basis vectors to ecef-basis
     """
-    def test_latitude_input_range(self):
+    def test_latitude_wrong_input(self):
         v_aux = np.array([1, 0, 0])
         self.assertRaises(ValueError, ned2ecef, v_aux, 91.0, 0)
         self.assertRaises(ValueError, ned2ecef, v_aux, -90.001, 0)
+        self.assertRaises(TypeError, ned2ecef, v_aux, 't', 0)
 
-    def test_longitude_input_range(self):
+    def test_longitude_wrong_input(self):
         v_aux = np.array([1, 0, 0])
-        self.assertRaises(ValueError, ned2ecef, v_aux, 0, -0.1)
-        self.assertRaises(ValueError, ned2ecef, v_aux, 0, 360.0)
+        self.assertRaises(ValueError, ned2ecef, v_aux, 0, -190.1)
+        self.assertRaises(ValueError, ned2ecef, v_aux, 0, 180.1)
+        self.assertRaises(TypeError, ned2ecef, v_aux, 0, '0')
 
     def test_1(self):
         lat, lng = 0, 0

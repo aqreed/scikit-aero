@@ -28,15 +28,24 @@ def lla2ecef(lat, lng, h):
     array-like
         ECEF coordinates in meters
     """
-
-    if isinstance(lat, float) and (abs(lat) > 90):
+    if isinstance(lat, (int, float)):
+        if abs(lat) > 90:
             raise ValueError('latitude should be -90 <= latitude <= 90')
+    else:
+        raise TypeError('latitude should be "float" or "int"')
 
-    if isinstance(lng, float) and ((lng < 0) or (lng > 359)):
-            raise ValueError('longitude should be 0 <= longitude <= 359')
+    if isinstance(lng, (int, float)):
+        if abs(lng) > 180:
+            raise ValueError('longitude should be -180 <= longitude <= 180')
+    else:
+        raise TypeError('longitude should be "float" or "int"')
 
-    if isinstance(h, float) and ((h < 0) or (h > 24000)):
-            raise ValueError('pressure model is only valid if 0 <= h <= 24000')
+    if isinstance(h, (int, float)):
+        if ((h < 0) or (h > 84852.05)):
+            msg = 'pressure model is only valid if 0 <= h <= 84852.05'
+            raise ValueError(msg)
+    else:
+        raise TypeError('altitude should be "float" or "int"')
 
     a = 6378137  # [m] Earth equatorial axis
     b = 6356752.3142  # [m] Earth polar axis
@@ -74,11 +83,17 @@ def ned2ecef(v_ned, lat, lng):
     v_ecef : array-like
         vector expressed in ECEF coordinates
     """
-    if isinstance(lat, float) and (abs(lat) > 90):
+    if isinstance(lat, (int, float)):
+        if abs(lat) > 90:
             raise ValueError('latitude should be -90 <= latitude <= 90')
+    else:
+        raise TypeError('latitude should be "float" or "int"')
 
-    if isinstance(lng, float) and ((lng < 0) or (lng > 359)):
-            raise ValueError('longitude should be 0 <= longitude <= 359')
+    if isinstance(lng, (int, float)):
+        if abs(lng) > 180:
+            raise ValueError('longitude should be -180 <= longitude <= 180')
+    else:
+        raise TypeError('longitude should be "float" or "int"')
 
     lat = deg2rad(lat)
     lng = deg2rad(lng)
