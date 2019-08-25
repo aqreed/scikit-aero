@@ -5,7 +5,7 @@
 """
 
 import numpy as np
-from numpy import sin, cos, tan, deg2rad, array
+from numpy import sin, cos, deg2rad, array
 
 
 def lla2ecef(lat, lng, h):
@@ -28,24 +28,15 @@ def lla2ecef(lat, lng, h):
     array-like
         ECEF coordinates in meters
     """
-    if isinstance(lat, (int, float)):
-        if abs(lat) > 90:
-            raise ValueError('latitude should be -90 <= latitude <= 90')
-    else:
-        raise TypeError('latitude should be "float" or "int"')
+    if abs(lat) > 90:
+        raise ValueError('latitude should be -90 <= latitude <= 90')
 
-    if isinstance(lng, (int, float)):
-        if abs(lng) > 180:
-            raise ValueError('longitude should be -180 <= longitude <= 180')
-    else:
-        raise TypeError('longitude should be "float" or "int"')
+    if abs(lng) > 180:
+        raise ValueError('longitude should be -180 <= longitude <= 180')
 
-    if isinstance(h, (int, float)):
-        if ((h < 0) or (h > 84852.05)):
-            msg = 'pressure model is only valid if 0 <= h <= 84852.05'
-            raise ValueError(msg)
-    else:
-        raise TypeError('altitude should be "float" or "int"')
+    if not (0 <= h <= 84852.05):
+        msg = 'pressure model is only valid if 0 <= h <= 84852.05'
+        raise ValueError(msg)
 
     a = 6378137  # [m] Earth equatorial axis
     b = 6356752.3142  # [m] Earth polar axis
@@ -83,17 +74,11 @@ def ned2ecef(v_ned, lat, lng):
     v_ecef : array-like
         vector expressed in ECEF coordinates
     """
-    if isinstance(lat, (int, float)):
-        if abs(lat) > 90:
-            raise ValueError('latitude should be -90 <= latitude <= 90')
-    else:
-        raise TypeError('latitude should be "float" or "int"')
+    if abs(lat) > 90:
+        raise ValueError('latitude should be -90 <= latitude <= 90')
 
-    if isinstance(lng, (int, float)):
-        if abs(lng) > 180:
-            raise ValueError('longitude should be -180 <= longitude <= 180')
-    else:
-        raise TypeError('longitude should be "float" or "int"')
+    if abs(lng) > 180:
+        raise ValueError('longitude should be -180 <= longitude <= 180')
 
     lat = deg2rad(lat)
     lng = deg2rad(lng)
@@ -129,23 +114,14 @@ def body2ned(v_body, theta, phi, psi):
     v_ned : array_like
         vector expressed in local horizon (NED) coordinates
     """
-    if isinstance(theta, (int, float)):
-        if abs(theta) > np.pi/2:
-            raise ValueError('theta should be -90º <= theta <= 90º')
-    else:
-        raise TypeError('theta should be "float" or "int"')
+    if abs(theta) > np.pi/2:
+        raise ValueError('theta should be -90º <= theta <= 90º')
 
-    if isinstance(phi, (int, float)):
-        if abs(phi) > np.pi:
-            raise ValueError('phi should be -180º <= phi <= 180º')
-    else:
-        raise TypeError('phi should be "float" or "int"')
+    if abs(phi) > np.pi:
+        raise ValueError('phi should be -180º <= phi <= 180º')
 
-    if isinstance(psi, (int, float)):
-        if not 0 <= psi <= 2*np.pi:
-            raise ValueError('psi should be 0º <= psi <= 360º')
-    else:
-        raise TypeError('psi should be "float" or "int"')
+    if not 0 <= psi <= 2*np.pi:
+        raise ValueError('psi should be 0º <= psi <= 360º')
 
     Lnb = array([[cos(theta) * cos(psi),
                   sin(phi) * sin(theta) * cos(psi) - cos(phi) * sin(psi),
@@ -183,23 +159,14 @@ def ned2body(v_ned, theta, phi, psi):
     v_body: array-like
         vector expressed in body coordinates
     """
-    if isinstance(theta, (int, float)):
-        if abs(theta) > np.pi/2:
-            raise ValueError('theta should be -90º <= theta <= 90º')
-    else:
-        raise TypeError('theta should be "float" or "int"')
+    if abs(theta) > np.pi/2:
+        raise ValueError('theta should be -90º <= theta <= 90º')
 
-    if isinstance(phi, (int, float)):
-        if abs(phi) > np.pi:
-            raise ValueError('phi should be -180º <= phi <= 180º')
-    else:
-        raise TypeError('phi should be "float" or "int"')
+    if abs(phi) > np.pi:
+        raise ValueError('phi should be -180º <= phi <= 180º')
 
-    if isinstance(psi, (int, float)):
-        if not 0 <= psi <= 2*np.pi:
-            raise ValueError('psi should be 0º <= psi <= 360º')
-    else:
-        raise TypeError('psi should be "float" or "int"')
+    if not 0 <= psi <= 2*np.pi:
+        raise ValueError('psi should be 0º <= psi <= 360º')
 
     Lbn = array([[cos(theta) * cos(psi),
                   cos(theta) * sin(psi),
