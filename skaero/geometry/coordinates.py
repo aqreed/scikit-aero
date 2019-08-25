@@ -5,7 +5,7 @@
 """
 
 import numpy as np
-from numpy import sin, cos, tan, deg2rad
+from numpy import sin, cos, tan, deg2rad, array
 
 
 def lla2ecef(lat, lng, h):
@@ -60,7 +60,7 @@ def lla2ecef(lat, lng, h):
     y = (N + h) * cos(lat) * sin(lng)
     z = (((b/a)**2) * N + h) * sin(lat)
 
-    return np.array([x, y, z])
+    return array([x, y, z])
 
 
 def ned2ecef(v_ned, lat, lng):
@@ -98,11 +98,119 @@ def ned2ecef(v_ned, lat, lng):
     lat = deg2rad(lat)
     lng = deg2rad(lng)
 
-    Lne = np.array([[-sin(lat) * cos(lng), -sin(lat) * sin(lng), cos(lat)],
-                    [-sin(lng), cos(lng), 0],
-                    [-cos(lat) * cos(lng), -cos(lat) * sin(lng), -sin(lat)]])
+    Lne = array([[-sin(lat) * cos(lng), -sin(lat) * sin(lng), cos(lat)],
+                 [-sin(lng), cos(lng), 0],
+                 [-cos(lat) * cos(lng), -cos(lat) * sin(lng), -sin(lat)]])
 
     Len = Lne.transpose()
     v_ecef = Len.dot(v_ned)
 
     return v_ecef
+
+
+def body2ned(v_body, theta, phi, psi):
+    """
+    Converts vector from body reference frame to local geodetic horizon
+    reference frame (NED - North, East, Down)
+
+    Parameters
+    ----------
+    v_body: array-like
+        vector expressed in body coordinates
+    theta : float
+        pitch angle in radians
+    phi : float
+        bank angle in radians
+    psi : float
+        yaw angle in radians
+
+    Returns
+    -------
+    v_ned : array_like
+        vector expressed in local horizon (NED) coordinates
+    """
+    if isinstance(theta, (int, float)):
+        if abs(theta) > np.pi/2:
+            raise ValueError('theta should be -90º <= theta <= 90º')
+    else:
+        raise TypeError('theta should be "float" or "int"')
+
+    if isinstance(phi, (int, float)):
+        if abs(phi) > np.pi:
+            raise ValueError('phi should be -180º <= phi <= 180º')
+    else:
+        raise TypeError('phi should be "float" or "int"')
+
+    if isinstance(psi, (int, float)):
+        if not 0 <= psi > 2*np.pi:
+            raise ValueError('psi should be 0º <= psi <= 360º')
+    else:
+        raise TypeError('psi should be "float" or "int"')
+
+    Lnb = array([[cos(theta) * cos(psi),
+                  sin(phi) * sin(theta) * cos(psi) - cos(phi) * sin(psi),
+                  cos(phi) * sin(theta) * cos(psi) + sin(phi) * sin(psi)],
+                 [cos(theta) * sin(psi),
+                  sin(phi) * sin(theta) * sin(psi) + cos(phi) * cos(psi),
+                  cos(phi) * sin(theta) * sin(psi) - sin(phi) * cos(psi)],
+                 [-sin(theta),
+                  sin(phi) * cos(theta),
+                  cos(phi) * cos(theta)]])
+
+    v_ned = Lnb.dot(v_body)
+
+    return v_ned
+
+
+def ned2body(v_ned, theta, phi, psi):
+    """
+    Transforms the vector coordinates in local horizon frame of reference
+    to body frame of reference.
+
+    Parameters
+    ----------
+    v_ned : array_like
+        vector expressed in local horizon (NED) coordinates
+    theta : float
+        pitch angle in radians
+    phi : float
+        bank angle in radians
+    psi : float
+        yaw angle in radians
+
+    Returns
+    -------
+    v_body: array-like
+        vector expressed in body coordinates
+    """
+    if isinstance(theta, (int, float)):
+        if abs(theta) > np.pi/2:
+            raise ValueError('theta should be -90º <= theta <= 90º')
+    else:
+        raise TypeError('theta should be "float" or "int"')
+
+    if isinstance(phi, (int, float)):
+        if abs(phi) > np.pi:
+            raise ValueError('phi should be -180º <= phi <= 180º')
+    else:
+        raise TypeError('phi should be "float" or "int"')
+
+    if isinstance(psi, (int, float)):
+        if not 0 <= psi > 2*np.pi:
+            raise ValueError('psi should be 0º <= psi <= 360º')
+    else:
+        raise TypeError('psi should be "float" or "int"')
+
+    Lbn = array([[cos(theta) * cos(psi),
+                  cos(theta) * sin(psi),
+                  -sin(theta)],
+                 [sin(phi) * sin(theta) * cos(psi) - cos(phi) * sin(psi),
+                  sin(phi) * sin(theta) * sin(psi) + cos(phi) * cos(psi),
+                  sin(phi) * cos(theta)],
+                 [cos(phi) * sin(theta) * cos(psi) + sin(phi) * sin(psi),
+                  cos(phi) * sin(theta) * sin(psi) - sin(phi) * cos(psi),
+                  cos(phi) * cos(theta)]])
+
+    v_body = Lbn.dot(v_ned)
+
+    return v_body
