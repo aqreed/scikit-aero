@@ -357,7 +357,7 @@ class Test_ned2body(ut.TestCase):
         theta, phi, psi = deg2rad(0), deg2rad(0), 'a'
         self.assertRaises(TypeError, ned2body, v_aux, theta, phi, psi)
 
-    def test_OXb(self):
+    def test_OXn(self):
         v_ned = array([1, 0, 0])
 
         theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(0)
@@ -395,7 +395,7 @@ class Test_ned2body(ut.TestCase):
         self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
                                     expected_value))
 
-    def test_OYb(self):
+    def test_OYn(self):
         v_ned = array([0, 1, 0])
 
         theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(0)
@@ -433,7 +433,7 @@ class Test_ned2body(ut.TestCase):
         self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
                                     expected_value))
 
-    def test_OZb(self):
+    def test_OZn(self):
         v_ned = array([0, 0, 1])
 
         theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(0)
@@ -469,4 +469,230 @@ class Test_ned2body(ut.TestCase):
         theta, phi, psi = deg2rad(0), deg2rad(0), deg2rad(270)
         expected_value = array([0, 0, 1])
         self.assertTrue(np.allclose(ned2body(v_ned, theta, phi, psi),
+                                    expected_value))
+
+
+class Test_body2wind(ut.TestCase):
+    """
+    Test function that transforms body-basis vectors to wind-basis
+    """
+    def test_wrong_alpha_input(self):
+        v_aux = array([1, 0, 0])
+
+        alpha, beta = deg2rad(90.1), deg2rad(0)
+        self.assertRaises(ValueError, body2wind, v_aux, alpha, beta)
+
+        alpha, beta = deg2rad(-90.01), deg2rad(0)
+        self.assertRaises(ValueError, body2wind, v_aux, alpha, beta)
+
+        alpha, beta = 'a', deg2rad(0)
+        self.assertRaises(TypeError, body2wind, v_aux, alpha, beta)
+
+    def test_wrong_beta_input(self):
+        v_aux = array([1, 0, 0])
+
+        alpha, beta = deg2rad(0), deg2rad(180.1)
+        self.assertRaises(ValueError, body2wind, v_aux, alpha, beta)
+
+        alpha, beta = deg2rad(0), deg2rad(-181)
+        self.assertRaises(ValueError, body2wind, v_aux, alpha, beta)
+
+        alpha, beta = deg2rad(0), 'a'
+        self.assertRaises(TypeError, body2wind, v_aux, alpha, beta)
+
+    def test_OXb(self):
+        v_body = array([1, 0, 0])
+
+        alpha, beta = deg2rad(0), deg2rad(0)
+        expected_value = array([1, 0, 0])
+        self.assertTrue(np.allclose(body2wind(v_body, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(90), deg2rad(0)
+        expected_value = array([0, 0, -1])
+        self.assertTrue(np.allclose(body2wind(v_body, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(-90), deg2rad(0)
+        expected_value = array([0, 0, 1])
+        self.assertTrue(np.allclose(body2wind(v_body, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(0), deg2rad(90)
+        expected_value = array([0, -1, 0])
+        self.assertTrue(np.allclose(body2wind(v_body, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(0), deg2rad(-90)
+        expected_value = array([0, 1, 0])
+        self.assertTrue(np.allclose(body2wind(v_body, alpha, beta),
+                                    expected_value))
+
+    def test_OYb(self):
+        v_body = array([0, 1, 0])
+
+        alpha, beta = deg2rad(0), deg2rad(0)
+        expected_value = array([0, 1, 0])
+        self.assertTrue(np.allclose(body2wind(v_body, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(90), deg2rad(0)
+        expected_value = array([0, 1, 0])
+        self.assertTrue(np.allclose(body2wind(v_body, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(-90), deg2rad(0)
+        expected_value = array([0, 1, 0])
+        self.assertTrue(np.allclose(body2wind(v_body, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(0), deg2rad(90)
+        expected_value = array([1, 0, 0])
+        self.assertTrue(np.allclose(body2wind(v_body, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(0), deg2rad(-90)
+        expected_value = array([-1, 0, 0])
+        self.assertTrue(np.allclose(body2wind(v_body, alpha, beta),
+                                    expected_value))
+
+    def test_OZb(self):
+        v_body = array([0, 0, 1])
+
+        alpha, beta = deg2rad(0), deg2rad(0)
+        expected_value = array([0, 0, 1])
+        self.assertTrue(np.allclose(body2wind(v_body, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(90), deg2rad(0)
+        expected_value = array([1, 0, 0])
+        self.assertTrue(np.allclose(body2wind(v_body, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(-90), deg2rad(0)
+        expected_value = array([-1, 0, 0])
+        self.assertTrue(np.allclose(body2wind(v_body, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(0), deg2rad(90)
+        expected_value = array([0, 0, 1])
+        self.assertTrue(np.allclose(body2wind(v_body, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(0), deg2rad(-90)
+        expected_value = array([0, 0, 1])
+        self.assertTrue(np.allclose(body2wind(v_body, alpha, beta),
+                                    expected_value))
+
+
+class Test_wind2body(ut.TestCase):
+    """
+    Test function that transforms wind-basis vectors to body-basis
+    """
+    def test_wrong_alpha_input(self):
+        v_aux = array([1, 0, 0])
+
+        alpha, beta = deg2rad(90.1), deg2rad(0)
+        self.assertRaises(ValueError, wind2body, v_aux, alpha, beta)
+
+        alpha, beta = deg2rad(-90.01), deg2rad(0)
+        self.assertRaises(ValueError, wind2body, v_aux, alpha, beta)
+
+        alpha, beta = 'a', deg2rad(0)
+        self.assertRaises(TypeError, wind2body, v_aux, alpha, beta)
+
+    def test_wrong_beta_input(self):
+        v_aux = array([1, 0, 0])
+
+        alpha, beta = deg2rad(0), deg2rad(180.1)
+        self.assertRaises(ValueError, wind2body, v_aux, alpha, beta)
+
+        alpha, beta = deg2rad(0), deg2rad(-181)
+        self.assertRaises(ValueError, wind2body, v_aux, alpha, beta)
+
+        alpha, beta = deg2rad(0), 'a'
+        self.assertRaises(TypeError, wind2body, v_aux, alpha, beta)
+
+    def test_OXw(self):
+        v_wind = array([1, 0, 0])
+
+        alpha, beta = deg2rad(0), deg2rad(0)
+        expected_value = array([1, 0, 0])
+        self.assertTrue(np.allclose(wind2body(v_wind, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(90), deg2rad(0)
+        expected_value = array([0, 0, 1])
+        self.assertTrue(np.allclose(wind2body(v_wind, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(-90), deg2rad(0)
+        expected_value = array([0, 0, -1])
+        self.assertTrue(np.allclose(wind2body(v_wind, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(0), deg2rad(90)
+        expected_value = array([0, 1, 0])
+        self.assertTrue(np.allclose(wind2body(v_wind, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(0), deg2rad(-90)
+        expected_value = array([0, -1, 0])
+        self.assertTrue(np.allclose(wind2body(v_wind, alpha, beta),
+                                    expected_value))
+
+    def test_OYw(self):
+        v_wind = array([0, 1, 0])
+
+        alpha, beta = deg2rad(0), deg2rad(0)
+        expected_value = array([0, 1, 0])
+        self.assertTrue(np.allclose(wind2body(v_wind, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(90), deg2rad(0)
+        expected_value = array([0, 1, 0])
+        self.assertTrue(np.allclose(wind2body(v_wind, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(-90), deg2rad(0)
+        expected_value = array([0, 1, 0])
+        self.assertTrue(np.allclose(wind2body(v_wind, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(0), deg2rad(90)
+        expected_value = array([-1, 0, 0])
+        self.assertTrue(np.allclose(wind2body(v_wind, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(0), deg2rad(-90)
+        expected_value = array([1, 0, 0])
+        self.assertTrue(np.allclose(wind2body(v_wind, alpha, beta),
+                                    expected_value))
+
+    def test_OZw(self):
+        v_wind = array([0, 0, 1])
+
+        alpha, beta = deg2rad(0), deg2rad(0)
+        expected_value = array([0, 0, 1])
+        self.assertTrue(np.allclose(wind2body(v_wind, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(90), deg2rad(0)
+        expected_value = array([-1, 0, 0])
+        self.assertTrue(np.allclose(wind2body(v_wind, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(-90), deg2rad(0)
+        expected_value = array([1, 0, 0])
+        self.assertTrue(np.allclose(wind2body(v_wind, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(0), deg2rad(90)
+        expected_value = array([0, 0, 1])
+        self.assertTrue(np.allclose(wind2body(v_wind, alpha, beta),
+                                    expected_value))
+
+        alpha, beta = deg2rad(0), deg2rad(-90)
+        expected_value = array([0, 0, 1])
+        self.assertTrue(np.allclose(wind2body(v_wind, alpha, beta),
                                     expected_value))
